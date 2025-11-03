@@ -20,8 +20,10 @@ export default function FounderPage() {
 
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
+  const [phoneError, setPhoneError] = useState("")
   const [showQRModal, setShowQRModal] = useState(false)
   const [upiLink, setUpiLink] = useState("")
+  const [payeeName, setPayeeName] = useState("")
   const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
@@ -31,6 +33,30 @@ export default function FounderPage() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
+    
+    if (name === "phone") {
+      // Only allow digits
+      const digitsOnly = value.replace(/\D/g, "")
+      
+      // Limit to 10 digits
+      const limitedValue = digitsOnly.slice(0, 10)
+      
+      setFormData((prev) => ({
+        ...prev,
+        [name]: limitedValue,
+      }))
+      
+      // Validate phone number length
+      if (limitedValue.length > 0 && limitedValue.length < 10) {
+        setPhoneError("Phone number must be exactly 10 digits")
+      } else if (limitedValue.length > 10) {
+        setPhoneError("Phone number cannot exceed 10 digits")
+      } else {
+        setPhoneError("")
+      }
+      return
+    }
+    
     if (name === "donationAmount") {
       if (value === "" || Number.parseFloat(value) >= 0) {
         setFormData((prev) => ({
@@ -55,6 +81,13 @@ export default function FounderPage() {
       return
     }
 
+    // Validate phone number is exactly 10 digits
+    if (formData.phone.length !== 10) {
+      setPhoneError("Phone number must be exactly 10 digits")
+      setError("Please fix the phone number error")
+      return
+    }
+
     const donationAmount = Number.parseFloat(formData.donationAmount)
     if (donationAmount < 100) {
       setError("Minimum founding contribution is ₹100")
@@ -65,12 +98,12 @@ export default function FounderPage() {
     setError("")
 
     const upiId = "deploy-union-aryanvbw@ibl"
-    const payeeName = "DeployUnion NST"
+    const merchantName = "DeployUnion NST"
     const amount = donationAmount.toFixed(2)
 
     const paymentNote = `Founder:${formData.name}|Phone:${formData.phone}${formData.email ? `|Email:${formData.email}` : ""}`
 
-    const generatedUpiLink = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(payeeName)}&am=${amount}&tn=${encodeURIComponent(paymentNote)}&tr=DU${Date.now()}`
+    const generatedUpiLink = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(merchantName)}&am=${amount}&tn=${encodeURIComponent(paymentNote)}&tr=DU${Date.now()}`
 
     sessionStorage.setItem("founderData", JSON.stringify(formData))
 
@@ -85,6 +118,7 @@ export default function FounderPage() {
       } else {
         // Desktop: Show QR code modal
         setUpiLink(generatedUpiLink)
+        setPayeeName(merchantName)
         setShowQRModal(true)
         setIsLoading(false)
       }
@@ -175,13 +209,18 @@ export default function FounderPage() {
               value={formData.phone}
               onChange={handleChange}
               required
-              placeholder="+91 "
+              placeholder="+91 XXXXXXXXXX"
+              maxLength={10}
               className="w-full bg-[#262626]/30 border border-border text-foreground placeholder-foreground/30 px-3 sm:px-4 py-2.5 sm:py-3 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/30 transition-all text-sm"
               style={{
                 clipPath:
                   "polygon(6px 0, calc(100% - 6px) 0, 100% 6px, 100% calc(100% - 6px), calc(100% - 6px) 100%, 6px 100%, 0 calc(100% - 6px), 0 6px)",
               }}
             />
+            {phoneError && <p className="text-xs text-red-400 font-mono mt-1">{phoneError}</p>}
+            {!phoneError && formData.phone.length === 10 && (
+              <p className="text-xs text-green-400 font-mono mt-1">✓ Valid phone number</p>
+            )}
           </div>
 
           <div>
@@ -225,6 +264,7 @@ export default function FounderPage() {
         upiLink={upiLink}
         amount={formData.donationAmount}
         userName={formData.name}
+        payeeName={payeeName}
         onPaymentComplete={handlePaymentComplete}
       />
     </div>

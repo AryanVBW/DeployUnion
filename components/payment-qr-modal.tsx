@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import { QRCodeSVG } from "qrcode.react"
 import {
   Dialog,
@@ -16,6 +17,7 @@ interface PaymentQRModalProps {
   upiLink: string
   amount: string
   userName: string
+  payeeName: string
   onPaymentComplete?: () => void
 }
 
@@ -25,14 +27,36 @@ export function PaymentQRModal({
   upiLink,
   amount,
   userName,
+  payeeName,
   onPaymentComplete,
 }: PaymentQRModalProps) {
+  const [showDebug, setShowDebug] = useState(false)
+
   const handlePaymentComplete = () => {
     if (onPaymentComplete) {
       onPaymentComplete()
     }
     onOpenChange(false)
   }
+
+  // Parse UPI link to extract details for verification
+  const parseUpiLink = () => {
+    try {
+      const url = new URL(upiLink)
+      const params = new URLSearchParams(url.search)
+      return {
+        payeeAddress: params.get('pa') || 'N/A',
+        payeeName: params.get('pn') || 'N/A',
+        amount: params.get('am') || 'N/A',
+        note: params.get('tn') || 'N/A',
+        transactionRef: params.get('tr') || 'N/A',
+      }
+    } catch (e) {
+      return null
+    }
+  }
+
+  const upiDetails = parseUpiLink()
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -85,7 +109,7 @@ export function PaymentQRModal({
               }}
             >
               <p className="text-foreground/60 font-mono text-xs mb-1">Paying to</p>
-              <p className="text-sm font-mono">DeployUnion NST</p>
+              <p className="text-sm font-mono">{payeeName}</p>
             </div>
           </div>
 
@@ -109,6 +133,41 @@ export function PaymentQRModal({
           >
             I've Completed Payment
           </Button>
+
+          {/* Debug Section - Toggle */}
+          <button
+            onClick={() => setShowDebug(!showDebug)}
+            className="text-foreground/40 hover:text-foreground/60 font-mono text-xs text-center transition-colors"
+          >
+            {showDebug ? "Hide" : "Show"} Payment Details
+          </button>
+
+          {/* Debug Information */}
+          {showDebug && upiDetails && (
+            <div className="w-full mt-2 p-3 bg-[#1a1a1a] border border-border/50 rounded text-left">
+              <p className="text-foreground/70 font-mono text-xs mb-2 font-semibold">
+                UPI Payment Details:
+              </p>
+              <div className="space-y-1 text-xs font-mono">
+                <p className="text-foreground/60">
+                  <span className="text-foreground/40">Payee VPA:</span>{" "}
+                  <span className="text-primary">{upiDetails.payeeAddress}</span>
+                </p>
+                <p className="text-foreground/60">
+                  <span className="text-foreground/40">Payee Name:</span>{" "}
+                  <span className="text-primary">{decodeURIComponent(upiDetails.payeeName)}</span>
+                </p>
+                <p className="text-foreground/60">
+                  <span className="text-foreground/40">Amount:</span>{" "}
+                  <span className="text-primary">₹{upiDetails.amount}</span>
+                </p>
+                <p className="text-foreground/60 break-all">
+                  <span className="text-foreground/40">Note:</span>{" "}
+                  <span className="text-primary">{decodeURIComponent(upiDetails.note)}</span>
+                </p>
+              </div>
+            </div>
+          )}
 
           <p className="text-foreground/40 font-mono text-xs text-center">
             Secure payment via UPI
