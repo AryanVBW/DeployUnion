@@ -13,8 +13,8 @@ const buttonVariants = cva(
         default: "bg-background border-primary text-primary-foreground [&>[data-border]]:bg-primary [box-shadow:inset_0_0_54px_0px_var(--tw-shadow-color)] shadow-[#EBB800] hover:shadow-[#EBB800]/80",
       },
       size: {
-        default: "h-16 px-6 text-base",
-        sm: "h-14 px-6 text-sm",
+        default: "h-12 sm:h-14 md:h-16 px-5 sm:px-6 md:px-8 text-sm sm:text-base md:text-lg",
+        sm: "h-10 sm:h-12 md:h-14 px-4 sm:px-5 md:px-6 text-xs sm:text-sm md:text-base",
       },
     },
     defaultVariants: {
