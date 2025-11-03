@@ -2,10 +2,12 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { PaymentQRModal } from "@/components/payment-qr-modal"
+import { isMobileDevice } from "@/lib/device-detection"
 
 export default function FounderPage() {
   const router = useRouter()
@@ -18,6 +20,14 @@ export default function FounderPage() {
 
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
+  const [showQRModal, setShowQRModal] = useState(false)
+  const [upiLink, setUpiLink] = useState("")
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    // Detect device type on mount
+    setIsMobile(isMobileDevice())
+  }, [])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -60,20 +70,33 @@ export default function FounderPage() {
 
     const paymentNote = `Founder:${formData.name}|Phone:${formData.phone}${formData.email ? `|Email:${formData.email}` : ""}`
 
-    const upiLink = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(payeeName)}&am=${amount}&tn=${encodeURIComponent(paymentNote)}&tr=DU${Date.now()}`
+    const generatedUpiLink = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(payeeName)}&am=${amount}&tn=${encodeURIComponent(paymentNote)}&tr=DU${Date.now()}`
 
     sessionStorage.setItem("founderData", JSON.stringify(formData))
 
     try {
-      window.location.href = upiLink
-      setTimeout(() => {
-        router.push("/founder/thank-you")
-      }, 1000)
+      // Device-specific payment flow
+      if (isMobile) {
+        // Mobile: Direct UPI app opening
+        window.location.href = generatedUpiLink
+        setTimeout(() => {
+          router.push("/founder/thank-you")
+        }, 1000)
+      } else {
+        // Desktop: Show QR code modal
+        setUpiLink(generatedUpiLink)
+        setShowQRModal(true)
+        setIsLoading(false)
+      }
     } catch (error) {
-      console.error("Error opening UPI payment:", error)
+      console.error("Error processing payment:", error)
       setIsLoading(false)
       setError("Failed to process payment. Please try again.")
     }
+  }
+
+  const handlePaymentComplete = () => {
+    router.push("/founder/thank-you")
   }
 
   return (
@@ -194,6 +217,16 @@ export default function FounderPage() {
           Only few {"{"}Limited{"}"} founding spots available worldwide
         </p>
       </div>
+
+      {/* QR Code Payment Modal for Desktop */}
+      <PaymentQRModal
+        open={showQRModal}
+        onOpenChange={setShowQRModal}
+        upiLink={upiLink}
+        amount={formData.donationAmount}
+        userName={formData.name}
+        onPaymentComplete={handlePaymentComplete}
+      />
     </div>
   )
 }
