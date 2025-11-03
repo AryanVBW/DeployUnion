@@ -29,7 +29,7 @@ export async function POST(request: Request) {
 
     // Send confirmation email to founder
     const founderEmail = await resend.emails.send({
-      from: 'DeployUnion <thanks-deployunion.nexus-v.tech>',
+      from: 'DeployUnion <nst@thanks-deployunion.nexus-v.tech>',
       to: [email],
       subject: 'Welcome to DeployUnion - Founding Member Confirmed! 🚀',
       html: generateFounderConfirmationHTML({
@@ -42,7 +42,7 @@ export async function POST(request: Request) {
 
     // Send notification to admin
     const adminEmail = await resend.emails.send({
-      from: 'DeployUnion <thanks-deployunion.nexus-v.tech>',
+      from: 'DeployUnion <nst@thanks-deployunion.nexus-v.tech>',
       to: ['vivek.aryanvbw@gmail.com'],
       subject: `New Founder: ${name} - ₹${Number.parseFloat(donationAmount).toLocaleString()}`,
       html: generateAdminNotificationHTML({
