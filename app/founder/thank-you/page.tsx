@@ -100,7 +100,7 @@ export default function ThankYouPage() {
               Return to Home
             </Button>
           </Link>
-          <a href="mailto:founders@deployunion.io" className="w-full">
+          <a href="mailto:vivek.aryanvbw@gmail.com" className="w-full">
             <Button className="w-full text-sm py-2.5">Contact Us</Button>
           </a>
         </div>

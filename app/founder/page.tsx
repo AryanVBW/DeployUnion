@@ -108,6 +108,26 @@ export default function FounderPage() {
     sessionStorage.setItem("founderData", JSON.stringify(formData))
 
     try {
+      // Send confirmation email
+      if (formData.email) {
+        try {
+          const emailResponse = await fetch('/api/send-email', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData),
+          });
+
+          if (!emailResponse.ok) {
+            console.error('Failed to send email:', await emailResponse.text());
+          }
+        } catch (emailError) {
+          console.error('Error sending email:', emailError);
+          // Continue with payment flow even if email fails
+        }
+      }
+
       // Device-specific payment flow
       if (isMobile) {
         // Mobile: Direct UPI app opening
