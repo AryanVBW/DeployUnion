@@ -113,7 +113,7 @@ export default function FounderPage() {
               value={formData.name}
               onChange={handleChange}
               required
-              placeholder="John Doe"
+              placeholder="Your Name & Surname "
               className="w-full bg-[#262626]/30 border border-border text-foreground placeholder-foreground/30 px-3 sm:px-4 py-2.5 sm:py-3 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/30 transition-all text-sm"
               style={{
                 clipPath:
@@ -152,7 +152,7 @@ export default function FounderPage() {
               value={formData.phone}
               onChange={handleChange}
               required
-              placeholder="+91 98765 43210"
+              placeholder="+91 "
               className="w-full bg-[#262626]/30 border border-border text-foreground placeholder-foreground/30 px-3 sm:px-4 py-2.5 sm:py-3 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/30 transition-all text-sm"
               style={{
                 clipPath:
@@ -191,7 +191,7 @@ export default function FounderPage() {
         </form>
 
         <p className="text-center text-foreground/40 font-mono text-xs mt-6 sm:mt-8 px-2">
-          Only {"{"}100{"}"} founding spots available worldwide
+          Only few {"{"}Limited{"}"} founding spots available worldwide
         </p>
       </div>
     </div>
