@@ -33,6 +33,12 @@ export const AdminNotificationEmail = ({
       <Preview>New Founding Member: {name} - ₹{formattedAmount}</Preview>
       <Body style={main}>
         <Container style={container}>
+          {/* Site Title Section */}
+          <Section style={titleSection}>
+            <Heading style={siteTitle}>DeployUnion</Heading>
+            <Text style={tagline}>Independent Cloud Infrastructure</Text>
+          </Section>
+
           <Heading style={h1}>New Founding Member! </Heading>
 
           <Section style={detailsCard}>
@@ -58,6 +64,17 @@ export const AdminNotificationEmail = ({
           </Section>
 
           <Text style={timestamp}>Time: {timestamp}</Text>
+
+          {/* Footer */}
+          <Section style={footer}>
+            <Hr style={footerDivider} />
+            <Text style={footerText}>
+              © 2025 DeployUnion. All rights reserved.
+            </Text>
+            <Text style={empoweredBy}>
+              Empowered by <span style={empoweredByName}>AryanVBW</span>
+            </Text>
+          </Section>
         </Container>
       </Body>
     </Html>
@@ -77,6 +94,28 @@ const container = {
   padding: '40px 20px',
   width: '100%',
   maxWidth: '600px',
+};
+
+const titleSection = {
+  padding: '0 0 20px',
+  textAlign: 'center' as const,
+  backgroundColor: '#0a0a0a',
+};
+
+const siteTitle = {
+  color: '#FFC700',
+  fontSize: '32px',
+  fontWeight: '700',
+  margin: '0',
+  fontFamily: 'Georgia, serif',
+  letterSpacing: '0.5px',
+};
+
+const tagline = {
+  color: '#a3a3a3',
+  fontSize: '12px',
+  margin: '8px 0 0 0',
+  fontWeight: '400',
 };
 
 const h1 = {
@@ -126,4 +165,34 @@ const timestamp = {
   color: '#737373',
   fontSize: '12px',
   margin: '20px 0 0 0',
+};
+
+const footer = {
+  padding: '32px 0 0 0',
+};
+
+const footerDivider = {
+  borderColor: 'rgba(255, 255, 255, 0.1)',
+  margin: '32px 0 20px 0',
+};
+
+const footerText = {
+  color: '#ffffff',
+  fontSize: '12px',
+  textAlign: 'center' as const,
+  margin: '8px 0',
+};
+
+const empoweredBy = {
+  color: '#737373',
+  fontSize: '11px',
+  textAlign: 'center' as const,
+  margin: '12px 0 0 0',
+  fontStyle: 'italic',
+};
+
+const empoweredByName = {
+  color: '#FFC700',
+  fontWeight: '600',
+  fontStyle: 'normal',
 };

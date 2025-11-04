@@ -4,7 +4,6 @@ import {
   Head,
   Heading,
   Html,
-  Img,
   Link,
   Preview,
   Section,
@@ -34,15 +33,10 @@ export const FounderConfirmationEmail = ({
       <Preview>Welcome to DeployUnion - Your Founding Membership Confirmed</Preview>
       <Body style={main}>
         <Container style={container}>
-          {/* Logo Section */}
-          <Section style={logoSection}>
-            <Img
-              src="https://deployunion.vercel.app/logo.png"
-              width="180"
-              height="45"
-              alt="DeployUnion"
-              style={logo}
-            />
+          {/* Site Title Section */}
+          <Section style={titleSection}>
+            <Heading style={siteTitle}>DeployUnion</Heading>
+            <Text style={tagline}>Independent Cloud Infrastructure</Text>
           </Section>
 
           {/* Success Icon */}
@@ -137,6 +131,9 @@ export const FounderConfirmationEmail = ({
             <Text style={footerSubtext}>
               © 2025 DeployUnion. All rights reserved.
             </Text>
+            <Text style={empoweredBy}>
+              Empowered by <span style={empoweredByName}>AryanVBW</span>
+            </Text>
           </Section>
         </Container>
       </Body>
@@ -159,14 +156,26 @@ const container = {
   maxWidth: '600px',
 };
 
-const logoSection = {
-  padding: '20px 0',
+const titleSection = {
+  padding: '30px 0 10px',
   textAlign: 'center' as const,
   backgroundColor: '#0a0a0a',
 };
 
-const logo = {
-  margin: '0 auto',
+const siteTitle = {
+  color: '#FFC700',
+  fontSize: '36px',
+  fontWeight: '700',
+  margin: '0',
+  fontFamily: 'Georgia, serif',
+  letterSpacing: '0.5px',
+};
+
+const tagline = {
+  color: '#a3a3a3',
+  fontSize: '13px',
+  margin: '8px 0 0 0',
+  fontWeight: '400',
 };
 
 const successSection = {
@@ -362,4 +371,18 @@ const footerSubtext = {
   fontSize: '11px',
   textAlign: 'center' as const,
   margin: '4px 0',
+};
+
+const empoweredBy = {
+  color: '#737373',
+  fontSize: '12px',
+  textAlign: 'center' as const,
+  margin: '16px 0 4px 0',
+  fontStyle: 'italic',
+};
+
+const empoweredByName = {
+  color: '#FFC700',
+  fontWeight: '600',
+  fontStyle: 'normal',
 };
